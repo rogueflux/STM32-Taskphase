@@ -1,0 +1,43 @@
+#include "main.h"
+#include "../ECUAL/SERVO/SERVO.h"
+ 
+#define SERVO_Motor1  0
+ 
+ADC_HandleTypeDef hadc1;
+ 
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_ADC1_Init(void);
+ 
+int main(void)
+{
+    uint16_t AD_RES = 0;
+    uint16_t Min_Pulse = 0, Max_Pulse = 0;
+    float temp = 0.0;
+    uint16_t Servo_Pulse = 0;
+ 
+    HAL_Init();
+    SystemClock_Config();
+    MX_GPIO_Init();
+    MX_ADC1_Init();
+    SERVO_Init(SERVO_Motor1);
+ 
+    Min_Pulse = SERVO_Get_MinPulse(SERVO_Motor1);
+    Max_Pulse = SERVO_Get_MaxPulse(SERVO_Motor1);
+ 
+    while (1)
+    {
+        // Start ADC Conversion
+        HAL_ADC_Start(&hadc1);
+        // Poll ADC1 Perihperal & TimeOut = 1mSec
+        HAL_ADC_PollForConversion(&hadc1, 1);
+        // Read The ADC Conversion Result & Map It To PWM DutyCycle
+        AD_RES = HAL_ADC_GetValue(&hadc1);
+        // Map The ADC Result To Servo Pulse Width
+        temp = ((Max_Pulse-Min_Pulse)/4096.0);
+        Servo_Pulse = (uint16_t)(AD_RES*temp) + Min_Pulse;
+        // Send The Raw Servo Pulse Width To The PWM Hardware
+        SERVO_RawMove(SERVO_Motor1, Servo_Pulse);
+        HAL_Delay(10);
+    }
+}
