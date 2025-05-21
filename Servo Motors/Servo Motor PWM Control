@@ -1,6 +1,5 @@
 #include "main.h"
 #include "../ECUAL/SERVO/SERVO.h"
-#define HAL_TIM_MODULE_ENABLED
  
 // The Servo Instance Index Must Start From 0
 #define SERVO_Motor1   0
