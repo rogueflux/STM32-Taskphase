@@ -1,0 +1,32 @@
+#include "main.h"
+#include "../ECUAL/SERVO/SERVO.h"
+#define HAL_TIM_MODULE_ENABLED
+ 
+// The Servo Instance Index Must Start From 0
+#define SERVO_Motor1   0
+ 
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+ 
+int main(void)
+{
+    HAL_Init();
+    SystemClock_Config();
+    MX_GPIO_Init();
+    SERVO_Init(SERVO_Motor1);
+    while (1)
+    {
+        SERVO_MoveTo(SERVO_Motor1, 0);
+        HAL_Delay(1000);
+        SERVO_MoveTo(SERVO_Motor1, 45);
+        HAL_Delay(500);
+        SERVO_MoveTo(SERVO_Motor1, 90);
+        HAL_Delay(500);
+        SERVO_MoveTo(SERVO_Motor1, 135);
+        HAL_Delay(500);
+        SERVO_MoveTo(SERVO_Motor1, 180);
+        HAL_Delay(500);
+        SERVO_MoveTo(SERVO_Motor1, 90);
+        HAL_Delay(1000);
+    }
+}
